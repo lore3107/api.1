@@ -1,3 +1,3 @@
 # api.1
 linguagens: java scripit, python
-lógica de programção
+lógica de programação
