@@ -1,3 +1,3 @@
-# api.1
-linguagens: java scripit, python
-lógica de programação
+# api 1
+linguagens: python
+revisando a lógica de programação e as variáveis do python 
