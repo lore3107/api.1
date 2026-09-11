@@ -28,3 +28,15 @@ elif nota>=6:
   print("Aprovado")
 else
 print("Reprovado")
+
+#criar uma função
+def saudação():
+  print("Olá")
+
+#devolver um resultado
+def somar():
+  resultado = 5 + 5
+  return resultado
+
+
+
