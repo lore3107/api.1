@@ -47,3 +47,13 @@ def altura():
 def nome():
   input("Digite o seu nome")
   return nome
+
+#diferença entre int e float: int serve para números inteiros e float serve para decimais.
+idade = int(input("Digite sua idade:"))
+nota = float(input("Digite sua nota:"))
+
+preço = float(input("Digite o preço:"))
+quantidade = int(input("Digite a quantidade:"))
+
+total = preço * quantidade
+print(total)
