@@ -38,5 +38,12 @@ def somar():
   resultado = 5 + 5
   return resultado
 
+#converter para decimal: float
+def altura():
+  altura = float("1.70")
+  print(altura)
 
-
+#recebe o texto: input
+def nome():
+  input("Digite o seu nome")
+  return nome
