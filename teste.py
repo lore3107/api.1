@@ -2,6 +2,7 @@
 print("Olá, mundo!")
 
 nome = "Lorena"
+
 idade = "18"
 
 print(nome)
@@ -57,3 +58,25 @@ quantidade = int(input("Digite a quantidade:"))
 
 total = preço * quantidade
 print(total)
+
+# variável local: dentro de uma função
+x = fantastic
+def myfunc():
+  print("Python is " + x)
+  myfunc()
+
+# variável global:  está dentro de uma função (nesse exemplo), mas não necessita de uma função pois é global 
+def myfunc():
+  global x
+  x = fantastic
+
+myfunc()   
+print("Python is " + x)
+
+# mudar o valor da variável global dentro da função 
+x = fantastic
+def myfunc():
+  global x 
+x = perfect
+
+print("Python is " + x)
