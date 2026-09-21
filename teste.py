@@ -80,3 +80,9 @@ def myfunc():
 x = perfect
 
 print("Python is " + x)
+
+
+# converter um valor para texto: str()
+idade = 17
+idade_texto = str(idade)
+
