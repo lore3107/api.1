@@ -2,6 +2,7 @@
 print("Olá, mundo!")
 
 nome = "Lorena"
+
 idade = "18"
 
 print(nome)
@@ -26,7 +27,61 @@ if nota>=9:
   print("Excelente")
 elif nota>=6:
   print("Aprovado")
-else
+else:
   print("Reprovado")
 
-  
+#criar uma função
+def saudação():
+  print("Olá")
+
+#devolver um resultado
+def somar():
+  resultado = 5 + 5
+  return resultado
+
+#converter para decimal: float
+def altura():
+  altura = float("1.70")
+  print(altura)
+
+#recebe o texto: input
+def nome():
+  input("Digite o seu nome")
+  return nome
+
+#diferença entre int e float: int serve para números inteiros e float serve para decimais.
+idade = int(input("Digite sua idade:"))
+nota = float(input("Digite sua nota:"))
+
+preço = float(input("Digite o preço:"))
+quantidade = int(input("Digite a quantidade:"))
+
+total = preço * quantidade
+print(total)
+
+# variável local: dentro de uma função
+x = fantastic
+def myfunc():
+  print("Python is " + x)
+  myfunc()
+
+# variável global:  está dentro de uma função (nesse exemplo), mas não necessita de uma função pois é global 
+def myfunc():
+  global x
+  x = fantastic
+
+myfunc()   
+print("Python is " + x)
+
+# mudar o valor da variável global dentro da função 
+x = fantastic
+def myfunc():
+  global x 
+x = perfect
+
+print("Python is " + x)
+
+
+# converter um valor para texto: str()
+idade = 17
+idade_texto = str(idade)
