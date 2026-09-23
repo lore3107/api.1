@@ -112,7 +112,7 @@ def test_multiplicar():
 ])
 
 
-import pytest
+# import pytest
 
 def multiplicar(a, b):
     return a * b
@@ -158,3 +158,25 @@ def test_calcular_desconto():
     assert calcular_desconto(50, 10) == 45
     assert calcular_desconto(0, 20) == 0
 
+
+def calcular_media(nota1, nota2):
+    return (nota1 + nota2) / 2
+def test_calcular_media():
+    assert calcular_media(8, 6) == 7
+
+
+def buscar_desconto():
+    return 10
+
+def calcular_preco(preco):
+    return preco - (preco * desconto / 100)
+
+def test_calcular_preco():
+    assert calcular_preco(200) == 180
+    assert calcular_preco(100) == 90
+    assert calcular_preco(50) == 45
+
+# mocker.patch substitui temporariamente o comportamento de alguma coisa durante o teste
+def test_calular_preco_com_mock(mocker):
+    mocker.patch("tests.run.buscar_desconto", return_value=20)
+    assert calcular_preco(100) == 80
