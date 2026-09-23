@@ -134,8 +134,6 @@ def test_multiplicar(a, b, resultado):
     # testa a função multiplicar com diferentes valores de entrada
     assert multiplicar(a, b) == resultado
 
-    
-
 
 def calcular_desconto(preco, desconto):
     return preco - (preco * desconto / 100)
@@ -178,7 +176,45 @@ def test_calcular_preco():
     assert calcular_preco(50) == 45
 
 # mocker.patch substitui temporariamente o comportamento de alguma coisa durante o teste
-def test_calular_preco_com_mock(mocker):
+def test_calcular_preco_com_mock(mocker):
     mocker.patch("tests.run.buscar_desconto", return_value=20)
     assert calcular_preco(100) == 80
-    assert calcular_preco(50) == 40
+
+def test_buscar_desconto_foi_chamada(mocker):
+    mocker.patch("tests.run.buscar_desconto", return_value=20)
+    calcular_preco(100)
+    assert mocker.called
+    # called - a função foi chamada?
+
+def test_buscar_desconto_foi_chamada_duas_vezes(mocker):
+    mock = mocker.patch("tests.run.buscar_desconto", return_value=20)
+    calcular_preco(100)
+    calcular_preco(200)
+    assert mock.call_count == 2
+    # call_count - a função foi chamada quantas vezes?
+
+def buscar_desconto(cliente_id):
+    return 10
+def calcular_preco(preco, cliente_id):
+    desconto = buscar_desconto(cliente_id)
+    return preco - (preco * desconto / 100)
+def test_calcular_preco_com_mock(mocker):
+    mocker.patch("tests.run.buscar_desconto", return_value=20)
+    assert calcular_preco(100, 42) == 80
+    mocker.assert_called_once_with(42)
+    # assert_called_once_with - a função foi chamada uma vez com o valor 42?
+
+
+def buscar_desconto(cliente_id):
+    return 10
+def calcular_preco(preco, cliente_id):
+    desconto = buscar_desconto(cliente_id)
+    return preco - (preco * desconto / 100)
+
+# side_effect - permite especificar diferentes valores de retorno para cada chamada da função mockada
+def test_descontos_diferentes(mocker):
+    mocker.patch("tests.run.buscar_desconto", side_effect=[10,20, 30])
+    assert calcular_preco(10) == 9
+    assert calcular_preco(20) == 16
+    assert calcular_preco(30) == 21
+
