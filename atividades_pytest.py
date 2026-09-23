@@ -169,6 +169,7 @@ def buscar_desconto():
     return 10
 
 def calcular_preco(preco):
+    desconto = buscar_desconto()
     return preco - (preco * desconto / 100)
 
 def test_calcular_preco():
@@ -180,3 +181,4 @@ def test_calcular_preco():
 def test_calular_preco_com_mock(mocker):
     mocker.patch("tests.run.buscar_desconto", return_value=20)
     assert calcular_preco(100) == 80
+    assert calcular_preco(50) == 40
