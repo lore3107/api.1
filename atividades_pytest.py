@@ -270,7 +270,77 @@ def test_descontos_por_cliente(mocker):
 
 
 
+# mark.parametrize - permite executar o mesmo teste com valores diferentes
+def calcular_dobro(numero):
+    return numero * 2
 
-# parametrize - permite executar o mesmo teste com diferentes valores de entrada 
+@atividades_pytest.mark.parametrize("numero, resultado", [
+    (2, 4),
+    (4, 8),
+    (6, 12)
+])
+def test_calcular_dobro(numero, resultado):
+    assert calcular_dobro(numero) == resultado
 
 
+def calcular_area(largura, altura):
+    return largura * altura 
+
+@atividades_pytest.mark.parametrize("largura, altura, resultado", [
+    (5, 2, 10),
+    (3, 4, 12),
+    (10, 5, 50)
+])
+def test_calcular_area(largura, altura, resultado):
+    assert calcular_area(largura, altura) == resultado
+
+def calcular_frete(distancia, valor_por_km):
+    return distancia * valor_por_km
+
+@atividades_pytest.mark.parametrize("distancia, valor_por_km, resultado", [
+    (10, 2, 20),
+    (25, 3, 75),
+    (100, 1.5, 150)
+])
+def test_calcular_frete(distancia, valor_por_km, resultado):
+    assert calcular_frete(distancia, valor_por_km) == resultado
+
+
+def classificar_nota(nota):
+    if nota >= 7:
+        return "Aprovado"
+    else:
+        return "Reprovado"
+@atividades_pytest.mark.parametrize("nota, resultado", [
+    (9, "Aprovado"),
+    (7, "Aprovado"),
+    (5, "Reprovado"),
+    (3, "Reprovado")
+])
+def test_classificar_nota(nota, resultado):
+    assert classificar_nota(nota) == resultado
+    assert classificar_nota(9) == "Aprovado"
+
+def calcular_imc(peso, altura):
+    return peso / (altura ** 2)
+
+@atividades_pytest.mark.parametrize("peso, altura, resultado", [
+    (60, 1.70, 20.76),
+    (70, 1.75, 22.85),
+    (80, 1.80, 24.69)
+])
+def test_calcular_imc(peso, altura, resultado):
+    assert round(calcular_imc(peso, altura), 2) == resultado
+
+def verificar_email(email):
+    return "@" in email
+@atividades_pytest.mark.parametrize("email, resultado", [
+    ("lorena@gmail.com", True),
+    ("teste.com", False),
+    ("abc@gmail.com", True),
+    ("usuario", False)
+])
+def test_verificar_email(email, resultado):
+    assert verificar_email(email) == resultado
+
+    
