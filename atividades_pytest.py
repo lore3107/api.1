@@ -343,4 +343,113 @@ def verificar_email(email):
 def test_verificar_email(email, resultado):
     assert verificar_email(email) == resultado
 
-    
+def criar_produto():
+    return {
+        "nome": "Notebook",
+        "preco": 3.000,
+        "estoque": 10
+    }
+def test_criar_produto():
+    assert isinstance(criar_produto()["nome"], str)
+    assert criar_produto()["nome"] == "Notebook"
+    assert isinstance(criar_produto()["preco"], float)
+    assert criar_produto()["preco"] == 3.000
+    assert isinstance(criar_produto()["estoque"]int)
+    assert criar_produto()["estoque"] == 10
+
+def sacar(saldo, valor):
+    if valor > saldo:
+        raise ValueError("Saldo insuficiente")
+
+    return saldo - valor 
+
+def test_saque_normal():
+    assert sacar(100, 40) == 60
+def test_saque_saldo_insuficiente():
+    with atividades_pytest.raises(ValueError):
+        assert sacar(100, 150)
+def test_mensagem_erro():
+    with atividades_pytest.raises(ValueError) as error_info:
+        assert sacar(100, 150)
+    assert str(error_info.value) == "Saldo insuficiente"
+
+
+@atividades_pytest.fixture 
+def produto():
+    return {
+        "nome": "Caderno", 
+        "preco": 20
+    }
+def test_preco(produto):
+    assert produto["preco"] == 20
+
+
+import atividades_pytest 
+@atividades_pytest.fixture 
+def usuario():
+    return {
+        "nome": "Maria",
+        "idade": 18
+    }
+def test_nome(usuario):
+    assert usuario["nome"] == "Maria"
+def test_idade(usuario):
+    assert usuario["idade"] == 18
+
+
+def calcular_total(preco, quantidade):
+    return preco * quantidade
+@atividades_pytest.fixture
+def produto():
+    return {
+        "preco": 20, 
+        "quantidade": 3
+    }
+def test_calcular_total(produto):
+    assert calcular_total(
+        produto["preco"],
+        produto["quantidade"]
+    ) == 60
+
+@atividades_pytest.fixture
+def produto():
+    return {
+        "nome": "Teclado",
+        "preco": 80,
+        "quantidade": 2
+    }
+
+def test_nome_produto(produto):
+    assert produto["nome"] == "Teclado"
+
+def test_total_produto(produto):
+    assert calcular_total(
+        produto["preco"],
+        produto["quantidade"]
+    ) == 160
+
+def aplicar_desconto(preco, desconto):
+    return preco - (preco * desconto / 100)
+@atividades_pytest.fixture
+def produto():
+    return {
+        "preco": 200,
+        "desconto": 10
+    }
+def test_aplicar_desconto(produto):
+    assert aplicar_desconto (
+        produto["preco"],
+        produto["desconto"]
+    ) == 180
+
+
+@atividades_pytest.mark.parametrize("desconto", "resultado", [
+    (10, 180),
+    (20, 160)
+])
+def test_aplicar_desconto(preco, desconto, resultado):
+    assert aplicar_desconto (
+        produto["preco"],
+        produto["desconto"],
+        produto["resultado"]
+    )

@@ -1,0 +1,11 @@
+import keyboard
+import time
+
+while True:
+    print("Processando dados...")
+    time.sleep(0.5)
+    
+    if keyboard.read_key() != "":
+        break
+print("loop interrompido")
+        
