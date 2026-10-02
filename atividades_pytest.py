@@ -443,13 +443,96 @@ def test_aplicar_desconto(produto):
     ) == 180
 
 
-@atividades_pytest.mark.parametrize("desconto", "resultado", [
+@atividades_pytest.mark.parametrize("desconto, resultado", [
     (10, 180),
     (20, 160)
 ])
-def test_aplicar_desconto(preco, desconto, resultado):
+def test_aplicar_desconto(produto, desconto, resultado):
     assert aplicar_desconto (
         produto["preco"],
-        produto["desconto"],
-        produto["resultado"]
+        desconto
+    ) == resultado
+
+
+def aplicar_desconto(preco, desconto):
+    if desconto < 0:
+        raise ValueError("Desconto inválido")
+
+    return preco - (preco * desconto / 100)
+
+def test_desconto_invalido():
+    with atividades_pytest.raises(ValueError) as error_info:
+        aplicar_desconto(200, -10)
+
+    assert str(error_info.value) == "Desconto inválido"
+
+
+
+def sacar(saldo, valor):
+    if valor > saldo:
+        raise ValueError("Saldo insuficiente")
+    return saldo - valor
+@atividades_pytest.mark.parametrize("valor, resultado", [
+    (20, 80), 
+    (50, 50)
+])
+def test_sacar(valor, resultado):
+    assert sacar(
+        100,
+        valor
+    ) == resultado
+
+
+def sacar(saldo, valor):
+    if valor > saldo:
+        raise ValueError("Saldo insuficiente")
+    return saldo - valor
+@atividades_pytest.mark.parametrize("saldo, valor", [
+    (100, 150),
+    (100, 200)
+])
+def test_saque_invalido(saldo, valor):
+    with atividades_pytest.raises(ValueError) as error_info:
+        sacar(saldo, valor)
+    assert str(error_info.value) == "Saldo insuficiente" 
+
+
+
+def calcular_frete(preco, distancia):
+    if distancia <= 10:
+        return 10
+    elif distancia <= 30:
+        return 20
+    else: 
+        return 30
+@atividades_pytest.mark.parametrize("distancia, resultado", [
+    (5, 10),
+    (20, 20),
+    (40, 30)
+])
+def test_calcular_frete(pedido, distancia, resultado):
+    valor = calcular_frete(
+        pedido["preco"],
+        distancia
     )
+    assert valor == resultado
+
+def aplicar_desconto(preco, desconto):
+    if desconto < 0:
+        raise ValueError("Desconto inválido")
+    return preco - (preco * desconto / 100)
+def test_aplicar_desconto_inválido():
+    with atividades_pytest.raises(ValueError) as error_info:
+        aplicar_desconto(200, -10)
+    assert str(error_info.value) == "Desconto inválido"
+
+atividades_pytest.mark.parametrize("desconto", [
+    -10,
+    -20,
+    -50
+])
+def test_aplicar_desconto_invalido(desconto):
+    with atividades_pytest.raises(ValueError) as error_info:
+# eu quero que essa função dê erro: with...
+        aplicar_desconto(200, desconto)
+    assert str(error_info.value) == "Desconto inválido"
