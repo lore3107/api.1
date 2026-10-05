@@ -441,9 +441,8 @@ def test_aplicar_desconto(produto):
         produto["preco"],
         produto["desconto"]
     ) == 180
-
-
-@atividades_pytest.mark.parametrize("desconto, resultado", [
+    
+    @atividades_pytest.mark.parametrize("desconto, resultado", [
     (10, 180),
     (20, 160)
 ])
@@ -536,3 +535,94 @@ def test_aplicar_desconto_invalido(desconto):
 # eu quero que essa função dê erro: with...
         aplicar_desconto(200, desconto)
     assert str(error_info.value) == "Desconto inválido"
+
+def verificar_idade(idade):
+    if idade >= 18:
+        return "Pode entrar"
+    return "Não pode entrar"
+
+
+# class serve para agrupar testes relacionados em uma única classe, melhorando a legibilidade e organização
+class TestVerificarIdade:
+    def test_verificar_idade_maior(self):
+# self é necessário para acessar os métodos da classe
+        assert verificar_idade(20) == "Pode entrar"
+    def test_verificar_idade_menor(self):
+        assert verificar_idade(15) == "Não pode entrar"
+
+class TestSaque:
+    def test_saque_normal(self):
+        assert sacar (100, 40) == 60
+    def test_saque_saldo_insuficiente(self):
+        with atividades_pytest.raises(ValueError) as error_info:
+            sacar (100, 150)
+        assert str(error_info.value) == ("Saldo insuficiente")
+
+        
+def multiplicar(a, b):
+    return a * b
+assert multiplicar(5, 2) == 10
+
+class TestMultplicar:
+    @atividades_pytest.mark.parametrize("a, b, resultado", [
+        (2, 3, 6),
+        (4, 5, 20),
+        (10, 2, 20)
+    ])
+    # as funções de test precisam estar dentro da classe
+    def test_multiplicar(self, a, b, resultado):
+        assert multiplicar(a, b) == resultado
+# parametrize permite executar o mesmo testes com diferentes valores 
+def aplicar_desconto(preco, desconto):
+    return preco - (preco * desconto/100)
+@atividades_pytest.fixture
+def produto():
+    return {"preco": 200}
+# dois testes diferentes dentro da mesma classe, facilitado a leitura
+
+class TestDesconto:
+    @atividades_pytest.mark.parametrize("desconto, resultado", [
+        (10, 180),
+        (20, 160),
+        (50, 100)
+    ])
+    # os valores precisam estar dentro do prametrize, caso contrario o teste não vai funcionar
+    def test_aplicar_desconto(self, produto, desconto, resultado):
+        assert aplicar_desconto(produto["preco"], desconto) == resultado
+@atividades_pytest.fixture
+def usuario():
+    return {"nome": "Lorena", "idade": 20}
+class TestUsuario:
+    # se tiver classe, tem que ter self, caso contrario o teste nao vai funcionar
+    def test_nome_usuario(self, usuario):
+        assert usuario["nome"] == "Lorena"
+    def test_idade_usuario(self, usuario):
+        assert usuario["idade"] == 20
+
+@atividades_pytest.fixture
+def usuario():
+    return {
+        "nome": "Lorena",
+        "idade": 20,
+        "ativo": True
+    }
+class TestUsuario:
+    def test_nome_usuario(self, usuario):
+        assert usuario["nome"] == "Lorena"
+        # leva colchetes se fizer referência a uma variável
+    def test_idade_usuario(self, usuario):
+        assert usuario["idade"] == 20
+    def test_usuario_ativo(self, usuario):
+        assert usuario["ativo"] == True 
+@atividades_pytest.fixture(scope="module")
+def usuario():
+    return {"nome": "Lorena", "idade": 20, "ativo": True}
+class TestUsuario:
+    def test_nome_usuario(self, usuario):
+        assert usuario["nome"] == "Lorena"
+    def test_idade_usuario(self, usuario):
+        assert usuario["idade"] == 20
+    def test_usuario_ativo(self, usuario):
+        assert usuario["ativo"] == True
+
+# diferença entre fixture e autouse: fixture precisa ser chamada, autouse é automática, não precisa ser chamada
