@@ -49,7 +49,7 @@ def test_dividir():
     assert dividir(20, 4) == 5
     assert dividir(15, 3) == 5
 
-import atividades_pytest
+import atividades_testes_1.atividades_pytest as atividades_pytest
 def dividir(a, b):
     if b == 0:
         raise ValueError("Não é possível dividir por zero")
@@ -354,7 +354,7 @@ def test_criar_produto():
     assert criar_produto()["nome"] == "Notebook"
     assert isinstance(criar_produto()["preco"], float)
     assert criar_produto()["preco"] == 3.000
-    assert isinstance(criar_produto()["estoque"]int)
+    assert isinstance(criar_produto()["estoque"], int)
     assert criar_produto()["estoque"] == 10
 
 def sacar(saldo, valor):
@@ -384,7 +384,7 @@ def test_preco(produto):
     assert produto["preco"] == 20
 
 
-import atividades_pytest 
+import atividades_testes_1.atividades_pytest as atividades_pytest 
 @atividades_pytest.fixture 
 def usuario():
     return {
@@ -442,7 +442,7 @@ def test_aplicar_desconto(produto):
         produto["desconto"]
     ) == 180
     
-    @atividades_pytest.mark.parametrize("desconto, resultado", [
+@atividades_pytest.mark.parametrize("desconto, resultado", [
     (10, 180),
     (20, 160)
 ])
@@ -462,7 +462,7 @@ def aplicar_desconto(preco, desconto):
 def test_desconto_invalido():
     with atividades_pytest.raises(ValueError) as error_info:
         aplicar_desconto(200, -10)
-
+# with significa que estamos esperando que a função aplique um erro, e o pytest vai capturar esse erro e armazenar na variável error_info
     assert str(error_info.value) == "Desconto inválido"
 
 
@@ -520,6 +520,7 @@ def aplicar_desconto(preco, desconto):
     if desconto < 0:
         raise ValueError("Desconto inválido")
     return preco - (preco * desconto / 100)
+
 def test_aplicar_desconto_inválido():
     with atividades_pytest.raises(ValueError) as error_info:
         aplicar_desconto(200, -10)
@@ -553,6 +554,7 @@ class TestVerificarIdade:
 class TestSaque:
     def test_saque_normal(self):
         assert sacar (100, 40) == 60
+
     def test_saque_saldo_insuficiente(self):
         with atividades_pytest.raises(ValueError) as error_info:
             sacar (100, 150)
@@ -572,9 +574,11 @@ class TestMultplicar:
     # as funções de test precisam estar dentro da classe
     def test_multiplicar(self, a, b, resultado):
         assert multiplicar(a, b) == resultado
-# parametrize permite executar o mesmo testes com diferentes valores 
+# parametrize permite executar o mesmo testes com diferentes valores
+
 def aplicar_desconto(preco, desconto):
     return preco - (preco * desconto/100)
+
 @atividades_pytest.fixture
 def produto():
     return {"preco": 200}
@@ -589,13 +593,17 @@ class TestDesconto:
     # os valores precisam estar dentro do prametrize, caso contrario o teste não vai funcionar
     def test_aplicar_desconto(self, produto, desconto, resultado):
         assert aplicar_desconto(produto["preco"], desconto) == resultado
+
 @atividades_pytest.fixture
 def usuario():
     return {"nome": "Lorena", "idade": 20}
+
+
 class TestUsuario:
     # se tiver classe, tem que ter self, caso contrario o teste nao vai funcionar
     def test_nome_usuario(self, usuario):
         assert usuario["nome"] == "Lorena"
+
     def test_idade_usuario(self, usuario):
         assert usuario["idade"] == 20
 
@@ -606,23 +614,120 @@ def usuario():
         "idade": 20,
         "ativo": True
     }
+
+
 class TestUsuario:
     def test_nome_usuario(self, usuario):
         assert usuario["nome"] == "Lorena"
         # leva colchetes se fizer referência a uma variável
     def test_idade_usuario(self, usuario):
         assert usuario["idade"] == 20
+
     def test_usuario_ativo(self, usuario):
         assert usuario["ativo"] == True 
+
 @atividades_pytest.fixture(scope="module")
 def usuario():
     return {"nome": "Lorena", "idade": 20, "ativo": True}
+
+# diferença entre fixture e autouse: fixture precisa ser chamada, autouse é automática, não precisa ser chamada
+@atividades_pytest.fixture(autouse=True)
+def arquivo():
+    print("Criando Arquivo")
+    yield "teste.txt"
+    print("Removendo arquivo")
+
+class TestArquivo:
+    def test_arquivo(self, arquivo):
+        assert arquivo == "teste.txt"
+
+@atividades_pytest.fixture
+def usuario():
+    return {
+        "nome": "Lorena",
+        "ativo": True
+    }
+    yield usuario
+    # yield sempre fica dentro da fixture
+    # usado para retornar o valor da fixture, e depois executar o teardown
+
+    usuario.clear()
+    # esse é o teardown, que limpa o dicionário usuario depois do teste
+    # teardown é importante para evitar que os testes interfiram uns nos outros, ou seja, para evitar efeitos colaterais
 class TestUsuario:
-    def test_nome_usuario(self, usuario):
+    def test_usuario_nome(self, usuario):
         assert usuario["nome"] == "Lorena"
-    def test_idade_usuario(self, usuario):
-        assert usuario["idade"] == 20
     def test_usuario_ativo(self, usuario):
         assert usuario["ativo"] == True
 
-# diferença entre fixture e autouse: fixture precisa ser chamada, autouse é automática, não precisa ser chamada
+class Usuario:
+    def __init__(self, nome, idade):
+        self.nome = nome
+        self.idade = idade
+    def pode_entrar(self):
+        return self.idade >= 18
+
+class TestUsuario:
+    def test_usuario_maior_idade(self):
+        usuario = Usuario("Lorena", 18)
+        assert usuario.pode_entrar() == True
+    def test_usuario_menor_idade(self):
+        usuario = Usuario("Maria", 15)
+        assert usuario.pode_entrar() == False 
+
+class Produto:
+    def __init__(self, nome, preco):
+        self.nome = nome
+        self.preco = preco
+    def aplicar_desconto(self, percentual):
+        return self.preco - (self.preco * percentual / 100)
+    
+
+class TestProduto:
+    def test_produto_preco(self):
+        produto = Produto("Notebook", 3000)
+
+        assert produto.nome == "Notebook"
+
+    def test_percentual(self):
+        produto = Produto("Notebook", 3000)
+        # para que possa ser executado o desconto é preciso chamar o método aplicar_desconto da classe Produto
+        resultado = produto.aplicar_desconto(10)
+        assert resultado == 2700
+
+class Produto:
+    def aplicar_desconto(self, percentual):
+        if percentual > 100:
+            raise ValueError("Percentual inválido")
+        return self.preco - (self.preco * percentual / 100)
+
+    def test_aplicar_desconto_invalido(self):
+        produto = Produto("Notebook", 3000)
+        with atividades_pytest.raises(ValueError) as error_info:
+            produto.aplicar_desconto (150)
+        assert str(error_info.value) == ("Percentual inválido")
+
+    def test_aplicar_desconto_invalido(self):
+        produto = Produto("Notebook", 3000)
+        with atividades_pytest.raises(ValueError) as error_info:
+            produto.aplicar_desconto (155)
+        assert str(error_info.value) == ("Percentual inválido")
+
+    def test_aplicar_desconto_invalido(self):
+        produto = Produto("Notebook", 3000)
+        with atividades_pytest.raises(ValueError) as error_info:
+            produto.aplicar_desconto (160)
+        assert str(error_info.value) == ("Percentual inválido")
+
+    def buscar_desconto(cliente_id):
+        return 10
+    def calcular_preco(preco, cliente_id):
+        desconto = buscar_desconto(cliente_id)
+        return preco - (preco * desconto / 100)
+    def test_calcular_preco(self, mocker):
+        mocker.patch(
+            "tests.run.calcular_preco", 
+            return_value=10
+            )
+        calcular_preco(100, 42)
+        mocker.called_once_with(42)
